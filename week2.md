@@ -22,11 +22,16 @@
 
 ```json
 {
-  "range": {"x": "400", "y": "400", "z": "400"},
+  "range": {
+    "x": "400",
+    "y": "400",
+    "z": "400"
+  },
   "objects": [
-    {"id": "earth", "name": "지구", "color": [0.35, 0.6, 0.95], "steps": [{"type": "Su", "args": ["6.371"]}]},
-    {"id": "moon", "name": "달", "color": [0.78, 0.78, 0.82], "steps": [{"type": "Rz","args": ["t"]},{"type": "T", "args": ["384.4","0","0"]}, {"type": "Su", "args": ["1.737"]}]},
-    {"id": "sat", "name": "인공위성", "color": [0.95, 0.72, 0.35], "steps": [{"type": "Rx", "args": ["7"]},{"type": "Ry", "args": ["t*450"]}, {"type": "T", "args": ["6.842", "0", "0"]},{"type": "Su","args": ["0.00003"]}]}}
+    {"id": "earth","name": "지구","color": [0.35,0.6,0.95],"steps": [{"type": "Su","args": ["6.371"]}]},
+    {"id": "moon","name": "달","color": [0.78,0.78,0.82],"steps": [{"type": "Rz","args": ["t*10"]},{"type": "T","args": ["384.4","0","0"]},{"type": "Su","args": ["1.737"]}]},
+    {"id": "sat","name": "인공위성","color": [0.95,0.72,0.35],
+    "steps": [{"type": "Rx","args": ["7"]},{"type": "Ry","args": ["t*450"]},{"type": "T","args": ["6.842","0","0"]},{"type": "Ry","args": ["90"]},{"type": "Su","args": ["0.00003"]}]}]}
 ```
 
 ![Task 1 결과](images/task1.png)
