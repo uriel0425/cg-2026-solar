@@ -1,7 +1,7 @@
 # 2주차 — 지구 · 달 · 인공위성의 변환 설계
 
 - 이름: 홍길동
-- 저장소: https://github.com/hong/cg-2026-solar
+- 저장소: https://github.com/uriel0425/cg-2026-solar
 - 실행: [Task 1](task1.html) · [Task 2](task2.html) · [Task 3](task3.html)
 
 ## Task 1 — 실제 비율로 배치하기
@@ -12,30 +12,43 @@
 | --- | --- | --- |
 | 지구 반지름 | 6371 km | 위키백과 |
 | 달까지의 거리 | 384400 km | 위키백과 |
+| 달의 반지름 | 1737 km | 위키백과|
+| lemur-2-greenberg의 크기 | 10X10X34.5cm | https://spire.com/spirepedia/low-earth-multi-use-receiver/|
 
 
 ### 단위를 정한 방법
 
-1,000km을 `1` 로 두었습니다. 숫자가 너무 커지면 ...
+1,000km을 `1` 로 두었습니다. 숫자가 너무 커지면 위 숫자 중 가장 큰 지구와 달 사이의 거리를 표현하는데 칸을 너무 많이 소모하게 됩니다 
 
 ### 내가 넣은 변환
 
 ```json
-{
-  "range": {
-    "x": "400",
-    "y": "400",
-    "z": "400"
-  },
-  "objects": [
+{"range": {"x": "400","y": "400","z": "400"},
+"objects": [
     {"id": "earth","name": "지구","color": [0.35,0.6,0.95],"steps": [{"type": "Su","args": ["6.371"]}]},
-    {"id": "moon","name": "달","color": [0.78,0.78,0.82],"steps": [{"type": "Rz","args": ["t*10"]},{"type": "T","args": ["384.4","0","0"]},{"type": "Su","args": ["1.737"]}]},
-    {"id": "sat","name": "인공위성","color": [0.95,0.72,0.35],
-    "steps": [{"type": "Rx","args": ["7"]},{"type": "Ry","args": ["t*450"]},{"type": "T","args": ["6.842","0","0"]},{"type": "Ry","args": ["90"]},{"type": "Su","args": ["0.00003"]}]}]}
+    {"id": "moon","name": "달","color": [0.78,0.78,0.82],"steps": [{"type": "Rz","args": ["t*10"]},{"type": "T","args": ["384.4","0","0"]},{"type": "Su","args": ["1.737"]},{"type": "Rz","args": ["180"]}]},
+    {"id": "sat","name": "인공위성","color": [0.95,0.72,0.35],"steps": [{"type": "Rx","args": ["7"]},{"type": "Ry","args": ["t*450"]},{"type": "T","args": ["6.842","0","0"]},{"type": "Ry","args": ["90"]},{"type": "Su","args": ["0.00003"]},{"type": "Rz","args": ["180"]}]}]}
 ```
+
+### **달·위성이 지구를 향하게 만든 변환**
+
+본래 지구의 반대편을 바라보던 달과 위성이기 때문에 Rz에서 180도를 돌려 지구를 항하게 하였다 
 
 ![Task 1 결과](images/task1.png)
 
 ## Task 2 — NDC 범위에 맞추기
+
+### **x, y, z좌표 1로 만들기**
+
+Task1에서 x, y, z좌표의 최대값을 `400`으로 지정하였기에 모든 물체에 `400분의 1`, 즉 `0.0025`를 곱해준다
+이때 '모든'이기 때문에 다른 연산이 다 끝난 후 마지막에 연산해준다
+
+```json
+{"range": {"x": "1","y": "1","z": "1"},
+  "objects": [
+    {"id": "earth","name": "지구","color": [0.35,0.6,0.95],"steps": [{"type": "Su","args": ["0.0025"]},{"type": "Su","args": ["6.371"]}]},
+    {"id": "moon","name": "달","color": [0.78,0.78,0.82],"steps": [{"type": "Su","args": ["0.0025"]},{"type": "Rz","args": ["t"]},{"type": "T","args": ["384.4","0","0"]},{"type": "Su","args": ["1.737"]},{"type": "Rz","args": ["180"]}]},
+    {"id": "sat","name": "인공위성","color": [0.95,0.72,0.35],"steps": [{"type": "Su","args": ["0.0025"]},{"type": "Rx","args": ["7"]},{"type": "Ry","args": ["t*450"]},{"type": "T","args": ["6.842","0","0"]},{"type": "Su","args": ["0.00003"]},{"type": "Rz","args": ["180"]}]}]}
+```
 
 ...
