@@ -75,11 +75,11 @@ function moonMatrix(t) {
 /* 인공위성 — 실습 도구에서 놓은 순서 그대로입니다 */
 function satelliteMatrix(t) {
   let M = M4.identity(M4.create());
-  M = M4.scale(M, M, [2.5, 2.5, 2.5]);   // 크기(균등) 0.025배
+  M = M4.scale(M, M, [0.025, 0.025, 0.025]);   // 크기(균등) 0.025배
   M = M4.rotateX(M, M, deg(7));   // 회전 Rx(7도)
   M = M4.rotateY(M, M, deg(t * 45));   // 회전 Ry(t*450도)
   M = M4.translate(M, M, [6.842, 0, 0]);   // 이동 T(6.842, 0, 0)
-  M = M4.scale(M, M, [0.00003, 0.00003, 0.00003]);   // 크기(균등) 0.00003배
+  M = M4.scale(M, M, [0.03, 0.03, 0.03]);   // 크기(균등) 0.00003배
   M = M4.rotateZ(M, M, deg(180));   // 회전 Rz(180도)
   return M;
 }
