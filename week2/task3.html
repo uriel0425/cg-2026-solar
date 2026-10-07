@@ -67,7 +67,7 @@ function moonMatrix(t) {
   M = M4.scale(M, M, [0.0025, 0.0025, 0.0025]);   // 크기(균등) 0.0025배
   M = M4.rotateZ(M, M, deg(t*20));   // 회전 Rz(t도)
   M = M4.translate(M, M, [384.4, 0, 0]);   // 이동 T(384.4, 0, 0)
-  M = M4.scale(M, M, [1.737, 1.737, 1.737]);   // 크기(균등) 1.737배
+  M = M4.scale(M, M, [17.37, 17.37, 17.37]);   // 크기(균등) 1.737배
   M = M4.rotateZ(M, M, deg(180));   // 회전 Rz(180도)
   return M;
 }
