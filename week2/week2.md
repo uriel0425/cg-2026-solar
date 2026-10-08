@@ -26,8 +26,8 @@
 {"range": {"x": "400","y": "400","z": "400"},
 "objects": [
     {"id": "earth","name": "지구","color": [0.35,0.6,0.95],"steps": [{"type": "Su","args": ["6.371"]}]},
-    {"id": "moon","name": "달","color": [0.78,0.78,0.82],"steps": [{"type": "Rz","args": ["t*10"]},{"type": "T","args": ["384.4","0","0"]},{"type": "Su","args": ["1.737"]},{"type": "Rz","args": ["180"]}]},
-    {"id": "sat","name": "인공위성","color": [0.95,0.72,0.35],"steps": [{"type": "Rx","args": ["7"]},{"type": "Ry","args": ["t*450"]},{"type": "T","args": ["6.842","0","0"]},{"type": "Ry","args": ["90"]},{"type": "Su","args": ["0.00003"]},{"type": "Rz","args": ["180"]}]}]}
+    {"id": "moon","name": "달","color": [0.78,0.78,0.82],"steps": [{"type": "Rz","args": ["t/30"]},{"type": "T","args": ["384.4","0","0"]},{"type": "Su","args": ["1.737"]},{"type": "Rz","args": ["180"]}]},
+    {"id": "sat","name": "인공위성","color": [0.95,0.72,0.35],"steps": [{"type": "Rx","args": ["7"]},{"type": "Ry","args": ["t*15"]},{"type": "T","args": ["6.842","0","0"]},{"type": "Ry","args": ["90"]},{"type": "Su","args": ["0.00003"]},{"type": "Rz","args": ["180"]}]}]}
 ```
 
 ### 달·위성이 지구를 향하게 만든 변환
@@ -61,8 +61,8 @@ Task1에서 x, y, z좌표의 최대값을 `400`으로 지정하였기에 모든 
 {"range": {"x": "1","y": "1","z": "1"},
  "objects":[
     {"id": "earth","name": "지구","color": [0.35,0.6,0.95],"steps": [{"type": "Su","args": ["0.0025"]},{"type": "Su","args": ["6.371"]}]},
-    {"id": "moon","name": "달","color": [0.78,0.78,0.82],"steps": [{"type": "Su","args": ["0.0025"]},{"type": "Rz","args": ["t"]},{"type": "T","args": ["384.4","0","0"]},{"type": "Su","args": ["1.737"]},{"type": "Rz","args": ["180"]}]},
-    {"id": "sat","name": "인공위성","color": [0.95,0.72,0.35],"steps": [{"type": "Su","args": ["0.0025"]},{"type": "Rx","args": ["7"]},{"type": "Ry","args": ["t*450"]},{"type": "T","args": ["6.842","0","0"]},{"type": "Su","args": ["0.00003"]},{"type": "Rz","args": ["180"]}]}]}
+    {"id": "moon","name": "달","color": [0.78,0.78,0.82],"steps": [{"type": "Su","args": ["0.0025"]},{"type": "Rz","args": ["t/30"]},{"type": "T","args": ["384.4","0","0"]},{"type": "Su","args": ["1.737"]},{"type": "Rz","args": ["180"]}]},
+    {"id": "sat","name": "인공위성","color": [0.95,0.72,0.35],"steps": [{"type": "Su","args": ["0.0025"]},{"type": "Rx","args": ["7"]},{"type": "Ry","args": ["t*15"]},{"type": "T","args": ["6.842","0","0"]},{"type": "Su","args": ["0.00003"]},{"type": "Rz","args": ["180"]}]}]}
 ```
 
 ## Task 3 — 보는 사람을 위한 표
@@ -88,7 +88,7 @@ Task2까지 했을 때 인공위성이 거의 보이지 않게 되었다
 {"range": {"x": "1","y": "1","z": "1"},
  "objects":[
     {"id": "earth","name": "지구","color": [0.35,0.6,0.95],"steps": [{"type": "Su","args": ["0.025"]},{"type": "Su","args": ["6.371"]}]},
-    {"id": "moon","name": "달","color": [0.78,0.78,0.82],"steps": [{"type": "Su","args": ["0.0025"]},{"type": "Rz","args": ["t"]},{"type": "T","args": ["384.4","0","0"]},{"type": "Su","args": ["1.737"]},{"type": "Rz","args": ["180"]}]},
-    {"id": "sat","name": "인공위성","color": [0.95,0.72,0.35],"steps": [{"type": "Su","args": ["0.025"]},{"type": "Rx","args": ["7"]},{"type": "Ry","args": ["t*450"]},{"type": "T","args": ["6.842","0","0"]},{"type": "Su","args": ["0.00003"]},{"type": "Rz","args": ["180"]}]}]}
+    {"id": "moon","name": "달","color": [0.78,0.78,0.82],"steps": [{"type": "Su","args": ["0.0025"]},{"type": "Rz","args": ["t/30"]},{"type": "T","args": ["384.4","0","0"]},{"type": "Su","args": ["1.737"]},{"type": "Rz","args": ["180"]}]},
+    {"id": "sat","name": "인공위성","color": [0.95,0.72,0.35],"steps": [{"type": "Su","args": ["0.025"]},{"type": "Rx","args": ["7"]},{"type": "Ry","args": ["t*15"]},{"type": "T","args": ["6.842","0","0"]},{"type": "Su","args": ["0.00003"]},{"type": "Rz","args": ["180"]}]}]}
 ```
 ...
