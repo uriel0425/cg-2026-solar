@@ -45,7 +45,7 @@ window.InspectionControls = function(canvas) {
     const unit=2*state.distance*Math.tan(state.fov*Math.PI/360)/rect.height;
     const right=rotate(state.rotation,[1,0,0]);
     const up=rotate(state.rotation,[0,1,0]);
-    state.target=state.target.map((v,i)=>v-dx*unit*right[i]+dy*unit*up[i]);
+    state.target=state.target.map((v,i)=>v+dx*unit*right[i]+dy*unit*up[i]);
     resetCenterPointer();
     state.actions++;
   }
