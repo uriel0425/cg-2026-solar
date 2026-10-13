@@ -1,6 +1,6 @@
 # 2주차 — 지구 · 달 · 인공위성의 변환 설계
 
-- 이름: 홍길동
+- 이름: 이재원
 - 저장소: https://github.com/uriel0425/cg-2026-solar
 - 실행: [Task 1](task1.html) · [Task 2](task2.html) · [Task 3](task3.html)
 
@@ -34,7 +34,7 @@
 
 본래 지구의 반대편을 바라보던 달과 위성이기 때문에 Rz에서 180도를 돌려 지구를 항하게 하였다 
 
-![Task 1 결과](images/task1.png)
+![Task 1 결과](image/task1.png)
 
 ## Task 2 — NDC 범위에 맞추기
 
