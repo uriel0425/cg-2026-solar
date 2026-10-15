@@ -206,15 +206,34 @@ void main() {
   float highEdge = 1.0 - smoothstep(0.006, 0.022, abs(h - 0.69));
   albedo = mix(albedo, vec3(0.31, 0.25, 0.19), max(lowEdge, highEdge) * 0.38);
 
-  /* ③ 낮은 지형에만 가느다란 강과 작은 호수를 만든다. */
+  /* ③ 물길과 수역을 더 크게, 더 명확하게 만들고, 고지대에서 저지대로 내려오는 경로를 몇 개 남긴다.
+     - 중간 지대에는 호수 대신 강 같은 흐름만 남긴다.
+     - 저지대는 큰 호수와 연결된 수역을 만들어 흐린 작은 웅덩이가 아닌, 더 넓은 호수처럼 보이게 한다. */
   vec3 warp = vec3(fbm(S * 2.1), fbm(S * 2.1 + 13.7), fbm(S * 2.1 + 31.4));
-  float flow = fbm(S * 5.2 + warp * 1.8);
-  float lowArea = 1.0 - smoothstep(0.57, 0.65, h);
-  float river = (1.0 - smoothstep(0.008, 0.020, abs(flow - 0.43))) * lowArea;
-  float lakeNoise = fbm(S * 10.0 + warp * 0.7);
-  float lake = smoothstep(0.77, 0.83, lakeNoise) * lowArea;
-  float water = max(river, lake);
-  albedo = mix(albedo, vec3(0.025, 0.29, 0.34), water * 0.94);
+  float basinNoise = fbm(S * 4.4 + warp * 2.1 + 5.2);
+  float lowArea = 1.0 - smoothstep(0.48, 0.72, h);
+  float midArea = 1.0 - smoothstep(0.40, 0.68, h);
+
+  float theta = atan(S.z, S.x);
+  float phi = acos(S.y);
+
+  // 물길은 중간 지대에서 시작해 저지대로 이어지는 강처럼 보이도록 넓게 유지한다.
+  float riverField = fbm(S * 7.0 + warp * 2.6);
+  float riverA = (1.0 - smoothstep(0.72, 0.94, riverField)) * smoothstep(0.52, 0.92, h);
+  float riverB = (1.0 - smoothstep(0.66, 0.88, riverField + 0.18 * sin(theta * 9.0 + 2.3))) * smoothstep(0.46, 0.84, h);
+  float riverC = (1.0 - smoothstep(0.62, 0.82, riverField + 0.20 * cos(phi * 8.0 + 1.2))) * lowArea;
+  float river = max(riverA, max(riverB, riverC));
+
+  // 저지대의 호수는 서로 이어지는 큰 수역으로 보이도록 넓고 연결되게 만든다.
+  float lakeField = fbm(S * 4.8 + warp * 1.5 + 9.0);
+  float basin = smoothstep(0.58, 0.84, lakeField + 0.26 * (1.0 - h)) * lowArea;
+  float connectedLake = smoothstep(0.66, 0.88, lakeField + 0.32 * (1.0 - h)) * lowArea;
+  float pond = smoothstep(0.74, 0.92, basinNoise) * lowArea * 1.55;
+  float lake = max(connectedLake, max(basin * 1.45, pond));
+  float marsh = smoothstep(0.58, 0.76, fbm(S * 6.6 + warp * 1.6)) * lowArea * 0.85;
+
+  float water = max(river, max(lake, marsh));
+  albedo = mix(albedo, vec3(0.15, 0.62, 0.75), water * 2.10);
 
   vec3 color = albedo * (0.10 + 0.90 * diff);
 
