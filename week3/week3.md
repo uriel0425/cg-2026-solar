@@ -2,7 +2,7 @@
 
 - 이름: 이재원
 - 저장소: https://github.com/uriel0425/cg-2026-solar
-- 실행: [Task 1](task1.html) · [Task 2](task2.html) · [Task 3](task3.html)
+- 실행: [Task 1](task1.html) · [Task 2](task2.html)
 
 ## Task 1 — 삼각형에서 3차원 장면까지
 
