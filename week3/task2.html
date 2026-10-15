@@ -194,46 +194,48 @@ void main() {
   float rawHeight = fbm(S * 2.6);
   float h = mix(rawHeight, pow(rawHeight, 0.82), 0.75);
 
-  /* ② 사막 저지대, 회갈색 산지, 흰 고지대를 고도별로 나눈다. */
-  float midlandMix = smoothstep(0.54, 0.60, h);
-  float highlandMix = smoothstep(0.66, 0.72, h);
-  vec3 lowland = vec3(0.68, 0.39, 0.14);
-  vec3 midland = vec3(0.39, 0.33, 0.27);
-  vec3 highland = vec3(0.94, 0.95, 0.91);
-  vec3 albedo = mix(lowland, midland, midlandMix);
-  albedo = mix(albedo, highland, highlandMix);
-  float lowEdge = 1.0 - smoothstep(0.006, 0.022, abs(h - 0.57));
-  float highEdge = 1.0 - smoothstep(0.006, 0.022, abs(h - 0.69));
-  albedo = mix(albedo, vec3(0.31, 0.25, 0.19), max(lowEdge, highEdge) * 0.38);
-
-  /* ③ 물길과 수역을 더 크게, 더 명확하게 만들고, 고지대에서 저지대로 내려오는 경로를 몇 개 남긴다.
-     - 중간 지대에는 호수 대신 강 같은 흐름만 남긴다.
-     - 저지대는 큰 호수와 연결된 수역을 만들어 흐린 작은 웅덩이가 아닌, 더 넓은 호수처럼 보이게 한다. */
-  vec3 warp = vec3(fbm(S * 2.1), fbm(S * 2.1 + 13.7), fbm(S * 2.1 + 31.4));
-  float basinNoise = fbm(S * 4.4 + warp * 2.1 + 5.2);
-  float lowArea = 1.0 - smoothstep(0.48, 0.72, h);
-  float midArea = 1.0 - smoothstep(0.40, 0.68, h);
-
+  /* ② 큰 도형 블록으로 나눈 뒤, 5개 빙하 구역과 7개 사막 구역을 만들고,
+     주변은 인접 구역 색으로 흡수시켜 큰 덩어리 경계를 유지한다. */
   float theta = atan(S.z, S.x);
   float phi = acos(S.y);
 
-  // 물길은 중간 지대에서 시작해 저지대로 이어지는 강처럼 보이도록 넓게 유지한다.
-  float riverField = fbm(S * 7.0 + warp * 2.6);
-  float riverA = (1.0 - smoothstep(0.72, 0.94, riverField)) * smoothstep(0.52, 0.92, h);
-  float riverB = (1.0 - smoothstep(0.66, 0.88, riverField + 0.18 * sin(theta * 9.0 + 2.3))) * smoothstep(0.46, 0.84, h);
-  float riverC = (1.0 - smoothstep(0.62, 0.82, riverField + 0.20 * cos(phi * 8.0 + 1.2))) * lowArea;
-  float river = max(riverA, max(riverB, riverC));
+  // 빙하를 더 크게 잡아 주변 얼음들이 서로 인접하게 이어지도록 만든다.
+  float glacierCore = 1.0 - smoothstep(0.08, 0.46, abs(sin(2.0 * theta + 0.6) + 0.8 * cos(1.8 * phi - 0.4) - 0.20));
+  float glacierRing1 = 1.0 - smoothstep(0.12, 0.58, abs(cos(2.7 * theta - 1.2) + 0.75 * sin(1.9 * phi + 1.3) - 0.22));
+  float glacierRing2 = 1.0 - smoothstep(0.14, 0.62, abs(sin(3.5 * theta + 2.2) + 0.75 * cos(2.4 * phi + 2.5) - 0.20));
+  float polarGlacier = 1.0 - smoothstep(0.46, 1.00, abs(S.y));
+  float glacierMask = max(glacierCore, max(glacierRing1, max(glacierRing2, polarGlacier)));
 
-  // 저지대의 호수는 서로 이어지는 큰 수역으로 보이도록 넓고 연결되게 만든다.
-  float lakeField = fbm(S * 4.8 + warp * 1.5 + 9.0);
-  float basin = smoothstep(0.58, 0.84, lakeField + 0.26 * (1.0 - h)) * lowArea;
-  float connectedLake = smoothstep(0.66, 0.88, lakeField + 0.32 * (1.0 - h)) * lowArea;
-  float pond = smoothstep(0.74, 0.92, basinNoise) * lowArea * 1.55;
-  float lake = max(connectedLake, max(basin * 1.45, pond));
-  float marsh = smoothstep(0.58, 0.76, fbm(S * 6.6 + warp * 1.6)) * lowArea * 0.85;
+  // 사막을 더 뚜렷한 큰 덩어리로 만들고, 빙하와 경계를 명확하게 한다.
+  float desertCore1 = 1.0 - smoothstep(0.30, 0.88, abs(cos(1.7 * theta - 2.0) + 0.82 * sin(1.6 * phi + 1.0) - 0.36));
+  float desertCore2 = 1.0 - smoothstep(0.32, 0.90, abs(sin(2.8 * theta + 2.4) + 0.78 * cos(1.9 * phi - 2.0) - 0.30));
+  float desertMask = max(desertCore1, desertCore2) * 0.90;
 
-  float water = max(river, max(lake, marsh));
-  albedo = mix(albedo, vec3(0.15, 0.62, 0.75), water * 2.10);
+  // 얼음이 하나의 큰 덩어리처럼 보이도록 주변 연결을 강하게 늘린다.
+  glacierMask = max(glacierMask, 1.0 - smoothstep(0.10, 0.44, abs(sin(4.1 * theta + 0.5) + 0.8 * cos(2.9 * phi - 1.0) - 0.10)));
+  glacierMask = max(glacierMask, 1.0 - smoothstep(0.12, 0.50, abs(cos(3.7 * theta - 1.8) + 0.8 * sin(2.2 * phi + 1.7) - 0.12)));
+  glacierMask = min(glacierMask + 0.10, 1.0);
+
+  // 빙하 우세는 유지하되, 사막은 더 선명한 대형 구역으로 유지한다.
+  glacierMask = max(glacierMask, 1.0 - desertMask);
+  desertMask = max(desertMask, 1.0 - glacierMask) * 0.85;
+  glacierMask = min(glacierMask, 0.96);
+  desertMask = min(desertMask, 0.88);
+  float regionMix = smoothstep(0.10, 0.26, abs(glacierMask - desertMask));
+
+  vec3 desert = vec3(0.82, 0.63, 0.23);
+  vec3 desertDark = vec3(0.48, 0.35, 0.17);
+  vec3 glacier = vec3(0.96, 0.98, 0.99);
+  vec3 glacierTint = vec3(0.72, 0.84, 0.92);
+
+  float desertCoverage = smoothstep(0.46, 0.98, desertMask);
+  float glacierCoverage = smoothstep(0.18, 0.82, glacierMask);
+  float glacierAccent = glacierCoverage * (1.0 - desertCoverage);
+
+  vec3 albedo = mix(glacier, desert, desertCoverage);
+  albedo = mix(albedo, glacierTint, glacierAccent * 0.65 + regionMix * 0.20);
+  albedo = mix(albedo, desertDark, desertCoverage * 0.22);
+  albedo = mix(albedo, desert, smoothstep(0.28, 0.95, desertMask));
 
   vec3 color = albedo * (0.10 + 0.90 * diff);
 
