@@ -2,14 +2,15 @@
 <html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>복합 연구시설 — 기본 트랙볼 뷰어</title><link rel="stylesheet" href="demo.css">
 <style>
-.wrap{grid-template-columns:minmax(0,1fr) 18rem;height:100vh;height:100dvh;min-height:500px}.stage{display:grid;grid-template-rows:minmax(240px,1fr) auto auto;align-items:stretch;justify-content:stretch;min-height:0;overflow:auto}.viewport{position:relative;min-height:0}.stage canvas{position:absolute;inset:0;display:block;width:100%;height:100%;max-height:none;cursor:grab}
+.wrap{grid-template-columns:minmax(0,1fr) 18rem;height:100vh;height:100dvh;min-height:500px}.stage{display:grid;grid-template-rows:minmax(240px,1fr) auto auto;align-items:stretch;justify-content:stretch;min-height:0;overflow:auto}.viewport{position:relative;min-height:0}.stage canvas{position:absolute;inset:0;display:block;width:100%;height:100%;max-height:none}
+.view-marker{position:absolute;inset:0 auto auto 0;z-index:1;width:33.3333%;height:33.3333%;border:2px solid var(--d-accent);pointer-events:none}
 canvas:focus-visible{outline:2px solid var(--d-accent);outline-offset:-2px}.readings{padding:10px 14px;white-space:pre-wrap;font:12px/1.6 monospace;color:var(--d-ink)}
 .instructions{padding:0 14px}.tasks{padding-left:22px}.tasks li{margin:9px 0}.actions{display:flex;gap:8px;flex-wrap:wrap}.actions button{flex:1}
 @media(max-width:900px){.wrap{display:block;height:auto}.panel{border-left:0;max-height:none}.stage{height:100vh;height:100dvh;min-height:500px}}
 </style></head><body>
 <div class="wrap"><div class="stage">
-<div class="viewport"><canvas id="cv" tabindex="0" aria-label="다층 연구시설의 3차원 모델. 드래그로 회전, Shift 드래그로 이동, 휠로 확대">WebGL2를 지원하는 브라우저에서 실행하세요.</canvas></div>
-<p class="instructions">왼쪽 클릭: 클릭 좌표를 (0, 0) 기준으로 정렬해 화면 중앙으로 재배치 · Shift+드래그 / 오른쪽 드래그: 평행 이동 · 휠: 거리 조절<br>키보드 방향키: 회전 · X / Y / Z: 각 축 정면 보기 · + / −: 거리 조절 · Home: 전체 보기</p>
+<div class="viewport"><canvas id="cv" tabindex="0" aria-label="왼쪽 클릭은 작은 화면에 P1부터 P6까지 표지판을 순서대로 확대합니다. 메인 화면 오른쪽 클릭은 O1 전면 직교 뷰와 O2 오른쪽 측면 직교 뷰를 전환합니다.">WebGL2를 지원하는 브라우저에서 실행하세요.</canvas><div class="view-marker" aria-hidden="true"></div></div>
+<p class="instructions">왼쪽 클릭: P1~P6 표지판을 작은 화면에 순서대로 확대 · 메인 화면 오른쪽 클릭: O1 전면 직교 비교, 다시 클릭하면 O2 오른쪽 측면 직교 비교 · 휠 스크롤: 메인 화면만 확대/축소 (위로 확대, 아래로 축소) · 가운데 휠 버튼 드래그: 메인 화면 확대/축소<br>일반 마우스 드래그: 사용 안 함 · 휠 스크롤은 작은 화면에 영향을 주지 않습니다 · 키보드 방향키: 마지막으로 조작한 뷰 회전 · X / Y / Z: 각 축 정면 보기 · + / −: 거리 조절 · Home: 전체 보기</p>
 <pre class="readings" id="readings"></pre></div>
 <div class="panel"><h1>복합 연구시설 관찰</h1><p class="sub">기본 조작만으로 표지 6곳을 읽고, 전면·측면 비교 2건도 시도하세요. 어디에서 조작이 어려워지는지 기록합니다.</p>
 <div class="actions"><button class="btn" id="home" type="button">전체 보기</button><button class="btn" id="measure" type="button">측정 시작 / 초기화</button></div>
